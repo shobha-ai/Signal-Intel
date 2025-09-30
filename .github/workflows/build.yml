@@ -1,6 +1,6 @@
 # .github/workflows/build.yml
 # This file defines the automatic build process on GitHub's servers.
-# V3: Replaced deprecated ncurses libraries with modern equivalent.
+# V4: Added a manual license acceptance step to force the build.
 
 name: Build Android APK
 
@@ -29,13 +29,18 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
-          # Replaced libncurses5-dev, libncursesw5-dev, and libtinfo5 with libncurses-dev
           sudo apt-get install -y --no-install-recommends git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev
           
       - name: Install build tools (with pinned versions)
         run: |
           pip install --upgrade pip
-          pip install buildozer cython==0.29.36 # Pinned version for stability
+          pip install buildozer cython==0.29.36
+
+      - name: Accept SDK licenses
+        run: |
+          # This step is the new, forceful fix.
+          # It runs the sdkmanager to download the command-line tools and accept licenses.
+          buildozer android_cmd "sdkmanager --licenses" || true
 
       - name: Build with Buildozer
         run: |
