@@ -1,4 +1,6 @@
 // app/build.gradle
+// This is the complete and corrected version.
+
 plugins {
     id 'com.android.application'
 }
@@ -21,8 +23,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    // This block is often needed for modern library compatibility.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    // We will add dependencies for UI etc. here later
+    // This is the dependency needed for AppCompatActivity in our Java code.
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 }
