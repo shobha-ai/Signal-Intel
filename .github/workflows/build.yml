@@ -1,6 +1,6 @@
 # .github/workflows/build.yml
 # This file defines the automatic build process on GitHub's servers.
-# V2: Updated artifact action and hardened dependency installation.
+# V3: Replaced deprecated ncurses libraries with modern equivalent.
 
 name: Build Android APK
 
@@ -29,7 +29,8 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          # Replaced libncurses5-dev, libncursesw5-dev, and libtinfo5 with libncurses-dev
+          sudo apt-get install -y --no-install-recommends git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev
           
       - name: Install build tools (with pinned versions)
         run: |
