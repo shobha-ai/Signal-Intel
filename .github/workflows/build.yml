@@ -1,6 +1,6 @@
 # .github/workflows/build.yml
 # This file defines the automatic build process on GitHub's servers.
-# V5: The Robust Solution - Manual Android SDK setup and forced license acceptance.
+# V6: Corrected the file-moving logic for SDK installation.
 
 name: Build Android APK
 
@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: '3.9'
       
-      # --- NEW: Manual Android SDK Setup ---
+      # --- CORRECTED: Manual Android SDK Setup ---
       - name: Install Android command-line tools
         run: |
           mkdir -p ${{ env.ANDROID_SDK_ROOT }}
@@ -38,13 +38,14 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmd-tools.zip
           unzip cmd-tools.zip
           rm cmd-tools.zip
-          # The tools are extracted to a folder named 'cmdline-tools'. We need to move them to a nested 'latest' folder.
-          mkdir -p ${{ env.ANDROID_SDK_ROOT }}/cmdline-tools/latest
-          mv ${{ env.ANDROID_SDK_ROOT }}/cmdline-tools/* ${{ env.ANDROID_SDK_ROOT }}/cmdline-tools/latest/
+          # Corrected logic: Rename the unzipped folder and move it to the correct final location.
+          mv cmdline-tools latest_temp
+          mkdir cmdline-tools
+          mv latest_temp cmdline-tools/latest
 
       - name: Add Android SDK to PATH
         run: |
-          # Make the sdkmanager and avdmanager tools available in the command line
+          # Make the sdkmanager and other tools available in the command line
           echo "${{ env.ANDROID_SDK_ROOT }}/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "${{ env.ANDROID_SDK_ROOT }}/platform-tools" >> $GITHUB_PATH
 
