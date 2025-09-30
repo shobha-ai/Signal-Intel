@@ -1,27 +1,31 @@
 # .github/workflows/build.yml
-# V10: The Community Standard - Using the official Kivy/Buildozer Docker image.
+# V11: The Correct Approach - Building a native Android app with Gradle.
 
 name: Build Android APK
 
 on: [push]
 
 jobs:
-  build-android:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build with official Kivy/Buildozer Docker image
-        uses: docker://kivy/buildozer
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          # This command runs inside the pre-configured container
-          command: buildozer -v android debug
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Build with Gradle
+        run: |
+          # The standard command to build a native Android app
+          chmod +x gradlew
+          ./gradlew build
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: signal-intel-apk
-          # The path where the container places the final APK
-          path: bin/*.apk
+          path: app/build/outputs/apk/debug/app-debug.apk

@@ -1,0 +1,28 @@
+// app/build.gradle
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.yourname.signalintel'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.yourname.signalintel"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // We will add dependencies for UI etc. here later
+}
