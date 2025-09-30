@@ -1,13 +1,12 @@
 # .github/workflows/build.yml
 # This file defines the automatic build process on GitHub's servers.
-# V6: Corrected the file-moving logic for SDK installation.
+# V7: Upgraded JDK to version 17 to match modern Android tools.
 
 name: Build Android APK
 
 on: [push]
 
 env:
-  # Set an environment variable for the Android SDK root location
   ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
 
 jobs:
@@ -18,45 +17,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java (Zulu OpenJDK)
+      - name: Set up Java (Zulu OpenJDK v17)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17' # <-- THIS IS THE FIX
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
       
-      # --- CORRECTED: Manual Android SDK Setup ---
       - name: Install Android command-line tools
         run: |
           mkdir -p ${{ env.ANDROID_SDK_ROOT }}
           cd ${{ env.ANDROID_SDK_ROOT }}
-          # Download the latest command-line tools from Google
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmd-tools.zip
           unzip cmd-tools.zip
           rm cmd-tools.zip
-          # Corrected logic: Rename the unzipped folder and move it to the correct final location.
           mv cmdline-tools latest_temp
           mkdir cmdline-tools
           mv latest_temp cmdline-tools/latest
 
       - name: Add Android SDK to PATH
         run: |
-          # Make the sdkmanager and other tools available in the command line
           echo "${{ env.ANDROID_SDK_ROOT }}/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "${{ env.ANDROID_SDK_ROOT }}/platform-tools" >> $GITHUB_PATH
 
       - name: Accept licenses and install SDK components
         run: |
-          # This is the most critical step. It forcefully accepts all licenses.
           yes | ${{ env.ANDROID_SDK_ROOT }}/cmdline-tools/latest/bin/sdkmanager --licenses
-          # Install the necessary platform tools, build tools, and platform API
           ${{ env.ANDROID_SDK_ROOT }}/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-31" "build-tools;34.0.0"
-
-      # --- End of Manual SDK Setup ---
 
       - name: Install build tools (pip)
         run: |
