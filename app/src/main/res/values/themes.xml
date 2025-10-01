@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.SignalIntel" parent="Theme.Material3.DayNight.NoActionBar">
+    <!--
+      Using Theme.AppCompat is the most robust way to ensure compatibility
+      on older Android versions like 6, 7, and 8.
+    -->
+    <style name="Theme.SignalIntel" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryVariant">@color/primary_variant_dark</item>
         <item name="colorOnPrimary">@color/white</item>
 
-        <!-- Secondary brand color. -->
+        <!-- Secondary brand color (used for tab indicator, FAB). -->
         <item name="colorSecondary">@color/accent_teal</item>
-        <item name="colorSecondaryVariant">@color/accent_teal</item>
         <item name="colorOnSecondary">@color/black</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/primary_variant_dark</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/primary_variant_dark</item>
 
         <!-- Background colors -->
         <item name="android:colorBackground">@color/background_dark</item>
-        <item name="colorSurface">@color/surface_dark</item>
-
-        <!-- Set text colors for the whole app -->
-        <item name="android:textColorPrimary">@color/text_primary_dark</item>
-        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
     </style>
 </resources>
