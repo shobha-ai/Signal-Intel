@@ -1,5 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- This theme will automatically adapt to light/dark mode -->
+    <!-- Base application theme. -->
     <style name="Theme.SignalIntel" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryVariant">@color/accent</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/primary_variant</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
     </style>
 </resources>
