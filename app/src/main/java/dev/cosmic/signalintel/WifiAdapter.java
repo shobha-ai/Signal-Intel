@@ -33,24 +33,22 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
         WifiNetwork network = networkList.get(position);
         Context context = holder.itemView.getContext();
 
-        // --- Populate the new UI fields ---
         holder.networkName.setText(network.getSsid());
         holder.macAddress.setText(network.getBssid().toUpperCase(Locale.ROOT));
         holder.signalStrengthText.setText(String.format(Locale.US, "%d dBm", network.getSignalStrength()));
 
-        // --- Set Icons ---
         holder.signalStrengthIcon.setImageDrawable(
             ContextCompat.getDrawable(context, getSignalLevelDrawable(network.getSignalStrength()))
         );
 
-        // --- Set Advanced Info ---
         int channel = getChannelFromFrequency(network.getFrequency());
         String band = getBandFromFrequency(network.getFrequency());
         holder.frequencyValue.setText(String.format(Locale.US, "%s / %d", band, channel));
         holder.securityValue.setText(getSecurityString(network.getCapabilities()));
         
-        // --- Placeholder for Manufacturer (Future Feature) ---
-        holder.manufacturerValue.setText("Unknown");
+        // This is the key change: we now call our MacVendorLookup class.
+        // It will handle the local cache and the internet lookup in the background.
+        MacVendorLookup.findVendor(network.getBssid(), holder.manufacturerValue);
     }
 
     @Override
@@ -58,13 +56,13 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
         return networkList.size();
     }
 
-    // --- Helper Methods for Data Conversion ---
+    // --- Helper Methods ---
 
     private int getSignalLevelDrawable(int rssi) {
-        if (rssi > -55) return R.drawable.ic_wifi_strength_4; // Excellent
-        if (rssi > -67) return R.drawable.ic_wifi_strength_3; // Good
-        if (rssi > -78) return R.drawable.ic_wifi_strength_2; // Fair
-        return R.drawable.ic_wifi_strength_1; // Poor
+        if (rssi > -55) return R.drawable.ic_wifi_strength_4;
+        if (rssi > -67) return R.drawable.ic_wifi_strength_3;
+        if (rssi > -78) return R.drawable.ic_wifi_strength_2;
+        return R.drawable.ic_wifi_strength_1;
     }
     
     private String getBandFromFrequency(int frequency) {
@@ -87,21 +85,14 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
 
     private String getSecurityString(String capabilities) {
         final String capLower = capabilities.toLowerCase();
-        if (capLower.contains("wpa3")) {
-            return "WPA3";
-        } else if (capLower.contains("wpa2")) {
-            return "WPA2";
-        } else if (capLower.contains("wpa")) {
-            return "WPA";
-        } else if (capLower.contains("wep")) {
-            return "WEP";
-        } else {
-            return "Open";
-        }
+        if (capLower.contains("wpa3")) return "WPA3";
+        if (capLower.contains("wpa2")) return "WPA2";
+        if (capLower.contains("wpa")) return "WPA";
+        if (capLower.contains("wep")) return "WEP";
+        return "Open";
     }
 
     // --- ViewHolder ---
-    // This inner class now finds all the new TextViews in our layout.
     public static class WifiViewHolder extends RecyclerView.ViewHolder {
         public final TextView networkName;
         public final TextView macAddress;
