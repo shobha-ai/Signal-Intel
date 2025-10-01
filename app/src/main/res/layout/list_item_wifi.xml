@@ -29,10 +29,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:textColor="@color/text_primary_dark"
             android:textSize="18sp"
             android:textStyle="bold"
-            <!-- THIS LINE IS FIXED -->
-            android:textColor="@color/text_primary_dark"
             app:layout_constraintStart_toEndOf="@id/wifi_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/signal_strength_text"
@@ -43,9 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:textSize="16sp"
-            <!-- THIS LINE IS FIXED -->
             android:textColor="@color/text_secondary_dark"
+            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@id/security_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
