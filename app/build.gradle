@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.yourname.signalintel'
+    namespace 'dev.cosmic.signalintel'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.yourname.signalintel"
+        applicationId "dev.cosmic.signalintel"
         minSdk 21
         targetSdk 34
         versionCode 1
@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
-    // This dependency is required for AppCompatActivity.
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    // Add this line for a modern UI
+    implementation 'com.google.android.material:material:1.11.0'
 }

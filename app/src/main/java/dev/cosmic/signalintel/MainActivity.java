@@ -1,4 +1,4 @@
-package com.yourname.signalintel;
+package dev.cosmic.signalintel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,5 @@
 <resources>
-    <style name="Theme.SignalIntel" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <!-- This theme will automatically adapt to light/dark mode -->
+    <style name="Theme.SignalIntel" parent="Theme.Material3.DayNight.NoActionBar">
     </style>
 </resources>
