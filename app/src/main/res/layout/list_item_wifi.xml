@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="4dp"
+    app:cardBackgroundColor="@color/surface_dark"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp">
 
@@ -19,9 +20,9 @@
             android:id="@+id/wifi_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:src="@drawable/ic_wifi_strength_4" />
 
         <TextView
@@ -32,9 +33,9 @@
             android:textColor="@color/text_primary_dark"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/signal_strength_text"
             app:layout_constraintStart_toEndOf="@id/wifi_icon"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/signal_strength_text"
             tools:text="My Home Network" />
 
         <TextView
@@ -44,18 +45,18 @@
             android:layout_marginEnd="8dp"
             android:textColor="@color/text_secondary_dark"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/security_icon"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="-55 dBm" />
 
         <ImageView
             android:id="@+id/security_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:src="@drawable/ic_lock" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
