@@ -2,17 +2,18 @@
 <resources>
     <!-- Primary color for the app bar -->
     <color name="primary_dark">#283593</color>
+    <!-- A slightly darker variant for the status bar -->
+    <color name="primary_variant_dark">#1A237E</color>
     
     <!-- Accent color for the tab indicator and FAB -->
     <color name="accent_teal">#00BCD4</color>
     
-    <!-- THE KEY TO A GOOD DARK THEME: -->
-    <!-- A very dark gray for the main app background -->
+    <!-- Main app background color -->
     <color name="background_dark">#121212</color>
-    <!-- A slightly lighter gray for surfaces "on top" of the background, like cards -->
+    <!-- Color for surfaces like cards -->
     <color name="surface_dark">#1E1E1E</color>
     
-    <!-- High-contrast text colors -->
+    <!-- Text colors -->
     <color name="text_primary_dark">#E0E0E0</color>
     <color name="text_secondary_dark">#B0BEC5</color>
 
