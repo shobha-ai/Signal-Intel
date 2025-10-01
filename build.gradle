@@ -1,4 +1,7 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// build.gradle (Root) - CORRECTED
+
+// This block is required for modern Android builds.
+// It defines the Android Gradle Plugin version for the entire project.
 plugins {
     id 'com.android.application' version '8.2.0' apply false
 }
