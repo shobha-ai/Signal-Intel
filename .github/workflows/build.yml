@@ -1,11 +1,11 @@
 # .github/workflows/build.yml
-# V11: The Correct Approach - Building a native Android app with Gradle.
+# V13: The Correct, Modern Native Build - Using the official Gradle Build Action.
 
 name: Build Android APK
 
 on: [push]
 
-jobs:
+jobs S:
   build:
     runs-on: ubuntu-latest
     steps:
@@ -19,10 +19,9 @@ jobs:
           java-version: '17'
 
       - name: Build with Gradle
-        run: |
-          # The standard command to build a native Android app
-          chmod +x gradlew
-          ./gradlew build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

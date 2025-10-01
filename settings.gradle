@@ -1,6 +1,25 @@
-// app/build.gradle
-// This is the complete and corrected version.
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Signal Intel"
+include ':app'
+EOF```
 
+**File 3: `app/build.gradle`**
+
+```bash
+cat << 'EOF' > app/build.gradle
 plugins {
     id 'com.android.application'
 }
@@ -20,10 +39,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    // This block is often needed for modern library compatibility.
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -31,6 +48,5 @@ android {
 }
 
 dependencies {
-    // This is the dependency needed for AppCompatActivity in our Java code.
     implementation 'androidx.appcompat:appcompat:1.6.1'
 }
