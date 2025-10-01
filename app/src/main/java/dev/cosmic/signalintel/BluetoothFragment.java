@@ -2,7 +2,6 @@ package dev.cosmic.signalintel;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -25,8 +24,8 @@ import java.util.Set;
 public class BluetoothFragment extends Fragment {
 
     private final ArrayList<BluetoothDevice> deviceList = new ArrayList<>();
-    private BluetoothAdapter bluetoothAdapter;
-    private BluetoothAdapter recyclerAdapter;
+    private android.bluetooth.BluetoothAdapter bluetoothAdapter; // Correctly referencing the system class
+    private BluetoothAdapter recyclerAdapter; // Our custom adapter
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -51,10 +50,9 @@ public class BluetoothFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.bluetooth_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         
-        recyclerAdapter = new BluetoothAdapter(deviceList);
+        recyclerAdapter = new BluetoothAdapter(deviceList); // Using the correct variable name and constructor
         recyclerView.setAdapter(recyclerAdapter);
 
-        // Check if the device has Bluetooth at all.
         if (bluetoothAdapter == null) {
             Toast.makeText(getContext(), "This device does not support Bluetooth", Toast.LENGTH_LONG).show();
         } else {
@@ -65,7 +63,6 @@ public class BluetoothFragment extends Fragment {
     }
 
     private void checkPermissionAndGetDevices() {
-        // For modern Android (12+), BLUETOOTH_CONNECT is required to get paired device names.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 getPairedDevices();
@@ -73,7 +70,6 @@ public class BluetoothFragment extends Fragment {
                 requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT);
             }
         } else {
-            // For older Android, the permission is granted at install time.
             getPairedDevices();
         }
     }
@@ -92,6 +88,6 @@ public class BluetoothFragment extends Fragment {
                 deviceList.add(new BluetoothDevice(device.getName(), device.getAddress()));
             }
         }
-        recyclerAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged(); // Correctly calling the method on our adapter
     }
 }
