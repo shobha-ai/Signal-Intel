@@ -1,15 +1,16 @@
 package dev.cosmic.signalintel;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-// The Adapter is the bridge between our data and the RecyclerView.
 public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder> {
 
     private final List<WifiNetwork> networkList;
@@ -18,7 +19,6 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
         this.networkList = networkList;
     }
 
-    // This is called when a new card view needs to be created.
     @NonNull
     @Override
     public WifiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -27,22 +27,55 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
         return new WifiViewHolder(view);
     }
 
-    // This is called to populate a card with data for a specific position.
     @Override
     public void onBindViewHolder(@NonNull WifiViewHolder holder, int position) {
         WifiNetwork network = networkList.get(position);
+        Context context = holder.itemView.getContext();
+
         holder.networkName.setText(network.getSsid());
         holder.signalStrengthText.setText(network.getSignalStrength() + " dBm");
-        // We will add icon logic later.
+
+        // --- ICON LOGIC ---
+
+        // Set the signal strength icon based on the RSSI level.
+        int signalLevel = getSignalLevel(network.getSignalStrength());
+        if (signalLevel >= 4) {
+            holder.wifiIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_wifi_strength_4));
+        } else if (signalLevel == 3) {
+            holder.wifiIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_wifi_strength_3));
+        } else if (signalLevel == 2) {
+            holder.wifiIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_wifi_strength_2));
+        } else {
+            holder.wifiIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_wifi_strength_1));
+        }
+
+        // Set the security icon based on the network capabilities string.
+        if (isNetworkOpen(network.getSecurityType())) {
+            holder.securityIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_no_encryption));
+        } else {
+            holder.securityIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_lock));
+        }
     }
 
-    // This tells the RecyclerView the total number of items in the list.
     @Override
     public int getItemCount() {
         return networkList.size();
     }
 
-    // The ViewHolder holds the views for a single card to improve performance.
+    // Helper method to convert dBm to a simple 0-4 level.
+    private int getSignalLevel(int rssi) {
+        if (rssi > -55) return 4; // Excellent
+        if (rssi > -67) return 3; // Good
+        if (rssi > -78) return 2; // Fair
+        return 1; // Poor
+    }
+    
+    // Helper method to check if the network is open or secured.
+    private boolean isNetworkOpen(String capabilities) {
+        final String capabilitiesLower = capabilities.toLowerCase();
+        return !capabilitiesLower.contains("wpa") && !capabilitiesLower.contains("wep");
+    }
+
     public static class WifiViewHolder extends RecyclerView.ViewHolder {
         public final TextView networkName;
         public final TextView signalStrengthText;

@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,13 +29,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class WifiFragment extends Fragment {
 
     private WifiAdapter adapter;
-    private ProgressBar progressBar;
     private WifiManager wifiManager;
+    private FloatingActionButton fabScan;
     private final ArrayList<WifiNetwork> networkList = new ArrayList<>();
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -49,6 +53,7 @@ public class WifiFragment extends Fragment {
         @Override
         public void onReceive(Context c, Intent intent) {
             boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
+            stopScanAnimation();
             if (success) {
                 scanSuccess();
             } else {
@@ -68,8 +73,7 @@ public class WifiFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wifi, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.wifi_recycler_view);
-        progressBar = view.findViewById(R.id.progress_bar);
-        FloatingActionButton fabScan = view.findViewById(R.id.fab_scan);
+        fabScan = view.findViewById(R.id.fab_scan);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new WifiAdapter(networkList);
@@ -103,36 +107,46 @@ public class WifiFragment extends Fragment {
     }
 
     private void startWifiScan() {
-        progressBar.setVisibility(View.VISIBLE);
-        networkList.clear();
-        adapter.notifyDataSetChanged();
-
+        startScanAnimation();
+        // The WifiManager automatically throttles scan requests.
+        // Calling startScan() is sufficient.
         boolean success = wifiManager.startScan();
         if (!success) {
+            stopScanAnimation();
             scanFailure();
         }
     }
 
     private void scanSuccess() {
-        progressBar.setVisibility(View.GONE);
-        try {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                List<ScanResult> results = wifiManager.getScanResults();
-                networkList.clear();
-                for (ScanResult scanResult : results) {
-                    if (scanResult.SSID != null && !scanResult.SSID.isEmpty()) {
-                        networkList.add(new WifiNetwork(scanResult.SSID, scanResult.level, scanResult.capabilities));
-                    }
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            List<ScanResult> results = wifiManager.getScanResults();
+            networkList.clear();
+            for (ScanResult scanResult : results) {
+                if (scanResult.SSID != null && !scanResult.SSID.isEmpty()) {
+                    networkList.add(new WifiNetwork(scanResult.SSID, scanResult.level, scanResult.capabilities));
                 }
-                adapter.notifyDataSetChanged();
             }
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "Error processing scan results.", Toast.LENGTH_SHORT).show();
+            // Sort the list by signal strength (strongest first).
+            Collections.sort(networkList, Comparator.comparingInt(WifiNetwork::getSignalStrength).reversed());
+            adapter.notifyDataSetChanged();
         }
     }
 
     private void scanFailure() {
-        progressBar.setVisibility(View.GONE);
         Toast.makeText(getContext(), "Wi-Fi scan failed to start.", Toast.LENGTH_SHORT).show();
+    }
+    
+    // This method creates and starts the rotation animation.
+    private void startScanAnimation() {
+        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(1000); // 1 second per rotation
+        rotate.setRepeatCount(Animation.INFINITE);
+        rotate.setInterpolator(new LinearInterpolator());
+        fabScan.startAnimation(rotate);
+    }
+    
+    // This method stops the animation.
+    private void stopScanAnimation() {
+        fabScan.clearAnimation();
     }
 }
