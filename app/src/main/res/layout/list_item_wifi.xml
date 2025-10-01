@@ -11,50 +11,134 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/wifi_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            tools:src="@drawable/ic_wifi_strength_4" />
+        <!-- Main Network Name (SSID) -->
+        <TextView
+            android:id="@+id/network_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/signal_strength_icon"
+            tools:text="My Home Network with a Long Name"/>
 
-        <ImageView
-            android:id="@+id/security_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            tools:src="@drawable/ic_lock" />
+        <!-- MAC Address (BSSID) -->
+        <TextView
+            android:id="@+id/mac_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/network_name"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="00:1A:2B:3C:4D:5E"/>
 
+        <!-- Signal Strength Icon -->
+        <ImageView
+            android:id="@+id/signal_strength_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@id/signal_strength_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/network_name"
+            tools:src="@drawable/ic_wifi_strength_4"/>
+
+        <!-- Signal Strength Text (dBm) -->
         <TextView
             android:id="@+id/signal_strength_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_toStartOf="@id/security_icon"
-            android:layout_centerVertical="true"
-            android:textColor="@color/text_secondary_dark"
-            android:textSize="16sp"
-            tools:text="-55 dBm" />
-
-        <TextView
-            android:id="@+id/network_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_toEndOf="@id/wifi_icon"
-            android:layout_toStartOf="@id/signal_strength_text"
-            android:layout_centerVertical="true"
             android:textColor="@color/text_primary_dark"
             android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="My Home Network with a Very Long Name" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/network_name"
+            tools:text="-55 dBm"/>
 
-    </RelativeLayout>
+        <!-- Divider Line -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/primary_dark"
+            app:layout_constraintTop_toBottomOf="@id/mac_address"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Left Column: Frequency/Channel -->
+        <TextView
+            android:id="@+id/frequency_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="12sp"
+            android:text="FREQ / CH"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/frequency_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/frequency_label"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="5 GHz / 44"/>
+            
+        <!-- Center Column: Manufacturer -->
+        <TextView
+            android:id="@+id/manufacturer_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="12sp"
+            android:text="MANUFACTURER"
+            app:layout_constraintTop_toTopOf="@id/frequency_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/manufacturer_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/manufacturer_label"
+            app:layout_constraintStart_toStartOf="@id/manufacturer_label"
+            tools:text="Netgear"/>
+
+        <!-- Right Column: Security -->
+        <TextView
+            android:id="@+id/security_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="12sp"
+            android:text="SECURITY"
+            app:layout_constraintTop_toTopOf="@id/frequency_label"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/security_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/security_label"
+            app:layout_constraintEnd_toEndOf="@id/security_label"
+            tools:text="WPA2"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

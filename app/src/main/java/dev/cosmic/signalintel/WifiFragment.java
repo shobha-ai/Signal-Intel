@@ -38,7 +38,6 @@ public class WifiFragment extends Fragment {
     private final ArrayList<WifiNetwork> networkList = new ArrayList<>();
     private boolean isScanning = false;
 
-    // --- Permission Handling ---
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -48,7 +47,6 @@ public class WifiFragment extends Fragment {
                 }
             });
 
-    // --- Broadcast Receiver for Scan Results ---
     private final BroadcastReceiver wifiScanReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context c, Intent intent) {
@@ -64,7 +62,6 @@ public class WifiFragment extends Fragment {
         }
     };
 
-    // --- Fragment Lifecycle ---
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -89,8 +86,6 @@ public class WifiFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Register the receiver when the fragment is visible.
-        // This is the classic, most stable pattern.
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         requireActivity().registerReceiver(wifiScanReceiver, intentFilter);
     }
@@ -98,15 +93,12 @@ public class WifiFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        // Always unregister the receiver when the fragment is not visible to prevent leaks.
         requireActivity().unregisterReceiver(wifiScanReceiver);
-        // If a scan was in progress, stop the animation.
         if (isScanning) {
             stopScanAnimation();
         }
     }
 
-    // --- Scan Logic ---
     private void handleScanButtonClick() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startWifiScan();
@@ -117,7 +109,7 @@ public class WifiFragment extends Fragment {
 
     private void startWifiScan() {
         if (isScanning) {
-            return; // Don't start a new scan if one is already in progress.
+            return;
         }
         startScanAnimation();
         boolean success = wifiManager.startScan();
@@ -128,13 +120,20 @@ public class WifiFragment extends Fragment {
     }
 
     private void scanSuccess() {
-        if (getContext() == null) return; // Safety check
+        if (getContext() == null) return;
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             List<ScanResult> results = wifiManager.getScanResults();
             networkList.clear();
             for (ScanResult scanResult : results) {
                 if (scanResult.SSID != null && !scanResult.SSID.isEmpty()) {
-                    networkList.add(new WifiNetwork(scanResult.SSID, scanResult.level, scanResult.capabilities));
+                    // This is the key change: we now pass ALL the advanced data to our WifiNetwork object.
+                    networkList.add(new WifiNetwork(
+                            scanResult.SSID,
+                            scanResult.BSSID,
+                            scanResult.level,
+                            scanResult.frequency,
+                            scanResult.capabilities
+                    ));
                 }
             }
             Collections.sort(networkList, Comparator.comparingInt(WifiNetwork::getSignalStrength).reversed());
@@ -148,7 +147,6 @@ public class WifiFragment extends Fragment {
         }
     }
 
-    // --- Animation Logic ---
     private void startScanAnimation() {
         isScanning = true;
         RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
