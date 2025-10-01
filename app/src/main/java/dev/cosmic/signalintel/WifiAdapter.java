@@ -36,7 +36,8 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
         holder.networkName.setText(network.getSsid());
         holder.macAddress.setText(network.getBssid().toUpperCase(Locale.ROOT));
         holder.signalStrengthText.setText(String.format(Locale.US, "%d dBm", network.getSignalStrength()));
-
+        
+        // This now uses the correct icon files we created
         holder.signalStrengthIcon.setImageDrawable(
             ContextCompat.getDrawable(context, getSignalLevelDrawable(network.getSignalStrength()))
         );
@@ -46,17 +47,14 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
         holder.frequencyValue.setText(String.format(Locale.US, "%s / %d", band, channel));
         holder.securityValue.setText(getSecurityString(network.getCapabilities()));
         
-        // This is the key change: we now call our MacVendorLookup class.
-        // It will handle the local cache and the internet lookup in the background.
-        MacVendorLookup.findVendor(network.getBssid(), holder.manufacturerValue);
+        // Placeholder - we will replace this with a real lookup next
+        holder.manufacturerValue.setText("Unknown");
     }
 
     @Override
     public int getItemCount() {
         return networkList.size();
     }
-
-    // --- Helper Methods ---
 
     private int getSignalLevelDrawable(int rssi) {
         if (rssi > -55) return R.drawable.ic_wifi_strength_4;
@@ -66,20 +64,14 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
     }
     
     private String getBandFromFrequency(int frequency) {
-        if (frequency >= 2400 && frequency < 3000) {
-            return "2.4 GHz";
-        } else if (frequency >= 5000 && frequency < 6000) {
-            return "5 GHz";
-        }
+        if (frequency >= 2400 && frequency < 3000) return "2.4 GHz";
+        if (frequency >= 5000 && frequency < 6000) return "5 GHz";
         return "?";
     }
 
     private int getChannelFromFrequency(int frequency) {
-        if (frequency >= 2412 && frequency <= 2484) {
-            return (frequency - 2412) / 5 + 1;
-        } else if (frequency >= 5180 && frequency <= 5825) {
-            return (frequency - 5180) / 5 + 36;
-        }
+        if (frequency >= 2412 && frequency <= 2484) return (frequency - 2412) / 5 + 1;
+        if (frequency >= 5180 && frequency <= 5825) return (frequency - 5180) / 5 + 36;
         return -1;
     }
 
@@ -92,7 +84,6 @@ public class WifiAdapter extends RecyclerView.Adapter<WifiAdapter.WifiViewHolder
         return "Open";
     }
 
-    // --- ViewHolder ---
     public static class WifiViewHolder extends RecyclerView.ViewHolder {
         public final TextView networkName;
         public final TextView macAddress;
