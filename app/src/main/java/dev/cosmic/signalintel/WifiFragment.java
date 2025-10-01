@@ -16,7 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -25,9 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,8 +36,9 @@ public class WifiFragment extends Fragment {
     private WifiManager wifiManager;
     private FloatingActionButton fabScan;
     private final ArrayList<WifiNetwork> networkList = new ArrayList<>();
-    private boolean isReceiverRegistered = false;
+    private boolean isScanning = false;
 
+    // --- Permission Handling ---
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -50,19 +48,23 @@ public class WifiFragment extends Fragment {
                 }
             });
 
+    // --- Broadcast Receiver for Scan Results ---
     private final BroadcastReceiver wifiScanReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context c, Intent intent) {
-            boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-            stopScanAnimation();
-            if (success) {
-                scanSuccess();
-            } else {
-                scanFailure();
+            if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())) {
+                stopScanAnimation();
+                boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
+                if (success) {
+                    scanSuccess();
+                } else {
+                    scanFailure("Scan results not updated.");
+                }
             }
         }
     };
 
+    // --- Fragment Lifecycle ---
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -81,20 +83,30 @@ public class WifiFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         fabScan.setOnClickListener(v -> handleScanButtonClick());
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Register the receiver when the fragment is visible.
+        // This is the classic, most stable pattern.
+        IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        requireActivity().registerReceiver(wifiScanReceiver, intentFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        // Unregister the receiver if it was registered.
-        if (isReceiverRegistered) {
-            requireActivity().unregisterReceiver(wifiScanReceiver);
-            isReceiverRegistered = false;
+        // Always unregister the receiver when the fragment is not visible to prevent leaks.
+        requireActivity().unregisterReceiver(wifiScanReceiver);
+        // If a scan was in progress, stop the animation.
+        if (isScanning) {
+            stopScanAnimation();
         }
     }
 
+    // --- Scan Logic ---
     private void handleScanButtonClick() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startWifiScan();
@@ -104,23 +116,19 @@ public class WifiFragment extends Fragment {
     }
 
     private void startWifiScan() {
-        // Only register the receiver right before a scan, and only if it's not already registered.
-        if (!isReceiverRegistered) {
-            IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-            requireActivity().registerReceiver(wifiScanReceiver, intentFilter);
-            isReceiverRegistered = true;
+        if (isScanning) {
+            return; // Don't start a new scan if one is already in progress.
         }
-
         startScanAnimation();
-        
         boolean success = wifiManager.startScan();
         if (!success) {
             stopScanAnimation();
-            scanFailure();
+            scanFailure("Wi-Fi scan failed to start.");
         }
     }
 
     private void scanSuccess() {
+        if (getContext() == null) return; // Safety check
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             List<ScanResult> results = wifiManager.getScanResults();
             networkList.clear();
@@ -134,19 +142,26 @@ public class WifiFragment extends Fragment {
         }
     }
 
-    private void scanFailure() {
-        Toast.makeText(getContext(), "Wi-Fi scan failed to start.", Toast.LENGTH_SHORT).show();
+    private void scanFailure(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
-    
+
+    // --- Animation Logic ---
     private void startScanAnimation() {
+        isScanning = true;
         RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate.setDuration(1000);
         rotate.setRepeatCount(Animation.INFINITE);
         rotate.setInterpolator(new LinearInterpolator());
         fabScan.startAnimation(rotate);
     }
-    
+
     private void stopScanAnimation() {
-        fabScan.clearAnimation();
+        isScanning = false;
+        if (fabScan != null) {
+            fabScan.clearAnimation();
+        }
     }
 }
