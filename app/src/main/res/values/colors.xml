@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- A deep, modern blue for primary surfaces like the toolbar -->
-    <color name="primary_dark">#1A237E</color>
-    <!-- A slightly lighter blue for variation -->
-    <color name="primary_variant_dark">#283593</color>
-    <!-- A vibrant teal for accents, like the tab indicator -->
+    <!-- Primary color for the app bar -->
+    <color name="primary_dark">#283593</color>
+    
+    <!-- Accent color for the tab indicator and FAB -->
     <color name="accent_teal">#00BCD4</color>
     
-    <!-- The main background of the app -->
+    <!-- THE KEY TO A GOOD DARK THEME: -->
+    <!-- A very dark gray for the main app background -->
     <color name="background_dark">#121212</color>
-    <!-- The color of the cards that our list items will sit on -->
+    <!-- A slightly lighter gray for surfaces "on top" of the background, like cards -->
     <color name="surface_dark">#1E1E1E</color>
     
-    <!-- High-emphasis text, almost white for clarity -->
+    <!-- High-contrast text colors -->
     <color name="text_primary_dark">#E0E0E0</color>
-    <!-- Lower-emphasis text, a softer gray -->
     <color name="text_secondary_dark">#B0BEC5</color>
 
-    <!-- Standard colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 </resources>

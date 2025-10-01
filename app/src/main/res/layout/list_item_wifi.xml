@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This is a simplified, more compatible layout for a single list item. -->
-<FrameLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="4dp">
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="6dp"
+    app:cardBackgroundColor="@color/surface_dark"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface_dark"
         android:padding="16dp">
 
         <ImageView
@@ -34,7 +36,7 @@
             android:id="@+id/signal_strength_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_toStartOf="@id/security_icon"
             android:layout_centerVertical="true"
             android:textColor="@color/text_secondary_dark"
@@ -43,7 +45,7 @@
 
         <TextView
             android:id="@+id/network_name"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/wifi_icon"
@@ -52,7 +54,7 @@
             android:textColor="@color/text_primary_dark"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="My Home Network" />
+            tools:text="My Home Network with a Very Long Name" />
 
     </RelativeLayout>
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>
