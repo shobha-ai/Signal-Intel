@@ -1,4 +1,4 @@
-// app/build.gradle - CORRECTED
+// app/build.gradle - CORRECTED AND COMPLETE
 
 plugins {
     id 'com.android.application'
@@ -21,7 +21,6 @@ android {
             minifyEnabled false
         }
     }
-    // This is a standard block for ensuring Java 8 compatibility.
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -29,7 +28,12 @@ android {
 }
 
 dependencies {
+    // Core library for app compatibility on different Android versions.
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    // Add this line for a modern UI
+
+    // Google's modern UI components (Toolbar, TabLayout, etc.).
     implementation 'com.google.android.material:material:1.11.0'
+
+    // Library for using Fragments, which power our tabbed pages.
+    implementation 'androidx.fragment:fragment:1.6.2'
 }
