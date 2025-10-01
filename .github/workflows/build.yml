@@ -1,5 +1,5 @@
 # .github/workflows/build.yml
-# V13.1: Corrected YAML syntax error.
+# V14: The Simple, Correct Solution - Explicitly specifying the Gradle version.
 
 name: Build Android APK
 
@@ -21,6 +21,9 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
+          # This line tells the action to use a specific Gradle version,
+          # bypassing the need for a local gradlew file. This is the fix.
+          gradle-version: '8.4'
           arguments: assembleDebug
 
       - name: Upload APK
