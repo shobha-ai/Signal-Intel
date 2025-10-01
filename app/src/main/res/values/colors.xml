@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary brand color (for the toolbar) -->
+    <color name="primary">#373a40</color>
+    <!-- A lighter variant of the primary color -->
+    <color name="primary_variant">#686d76</color>
+    <!-- Accent color (for highlights, indicators, etc.) -->
+    <color name="accent">#1d5d90</color>
+    
+    <!-- App background color -->
+    <color name="background">#222831</color>
+    <!-- Surface color (for cards, dialogs, etc.) -->
+    <color name="surface">#393e46</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#eeeeee</color>
+    <color name="text_secondary">#bdbdbd</color>
+
+    <!-- Standard colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>
