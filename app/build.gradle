@@ -13,8 +13,11 @@ android {
         versionCode 1
         versionName "1.0"
 
-        // This flag enables MultiDex.
         multiDexEnabled true
+
+        // This is the critical flag. It tells the build tools to
+        // generate backward-compatible code for our vector icons.
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -29,12 +32,12 @@ android {
 }
 
 dependencies {
+    // This library contains the code that actually makes the support flag work on old devices.
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.fragment:fragment:1.6.2'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.activity:activity:1.8.0'
-
-    // This is the MultiDex support library.
     implementation 'androidx.multidex:multidex:2.0.1'
 }
