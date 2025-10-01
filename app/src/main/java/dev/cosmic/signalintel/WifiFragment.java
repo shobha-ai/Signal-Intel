@@ -39,6 +39,7 @@ public class WifiFragment extends Fragment {
     private WifiManager wifiManager;
     private FloatingActionButton fabScan;
     private final ArrayList<WifiNetwork> networkList = new ArrayList<>();
+    private boolean isReceiverRegistered = false;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -85,17 +86,13 @@ public class WifiFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        requireActivity().registerReceiver(wifiScanReceiver, intentFilter);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        requireActivity().unregisterReceiver(wifiScanReceiver);
+        // Unregister the receiver if it was registered.
+        if (isReceiverRegistered) {
+            requireActivity().unregisterReceiver(wifiScanReceiver);
+            isReceiverRegistered = false;
+        }
     }
 
     private void handleScanButtonClick() {
@@ -107,9 +104,15 @@ public class WifiFragment extends Fragment {
     }
 
     private void startWifiScan() {
+        // Only register the receiver right before a scan, and only if it's not already registered.
+        if (!isReceiverRegistered) {
+            IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+            requireActivity().registerReceiver(wifiScanReceiver, intentFilter);
+            isReceiverRegistered = true;
+        }
+
         startScanAnimation();
-        // The WifiManager automatically throttles scan requests.
-        // Calling startScan() is sufficient.
+        
         boolean success = wifiManager.startScan();
         if (!success) {
             stopScanAnimation();
@@ -126,7 +129,6 @@ public class WifiFragment extends Fragment {
                     networkList.add(new WifiNetwork(scanResult.SSID, scanResult.level, scanResult.capabilities));
                 }
             }
-            // Sort the list by signal strength (strongest first).
             Collections.sort(networkList, Comparator.comparingInt(WifiNetwork::getSignalStrength).reversed());
             adapter.notifyDataSetChanged();
         }
@@ -136,16 +138,14 @@ public class WifiFragment extends Fragment {
         Toast.makeText(getContext(), "Wi-Fi scan failed to start.", Toast.LENGTH_SHORT).show();
     }
     
-    // This method creates and starts the rotation animation.
     private void startScanAnimation() {
         RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setDuration(1000); // 1 second per rotation
+        rotate.setDuration(1000);
         rotate.setRepeatCount(Animation.INFINITE);
         rotate.setInterpolator(new LinearInterpolator());
         fabScan.startAnimation(rotate);
     }
     
-    // This method stops the animation.
     private void stopScanAnimation() {
         fabScan.clearAnimation();
     }
