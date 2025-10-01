@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This is the card layout for a single Wi-Fi network. -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,13 +10,11 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp">
 
-    <!-- ConstraintLayout is a powerful tool for positioning elements. -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Placeholder for the Wi-Fi icon (we will add the real icon later) -->
         <ImageView
             android:id="@+id/wifi_icon"
             android:layout_width="24dp"
@@ -25,36 +22,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@android:drawable/ic_menu_sort_by_size" />
+            tools:src="@drawable/ic_wifi_strength_4" />
 
-        <!-- Network Name (SSID) -->
         <TextView
             android:id="@+id/network_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
+            <!-- THIS LINE IS FIXED -->
+            android:textColor="@color/text_primary_dark"
             app:layout_constraintStart_toEndOf="@id/wifi_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/signal_strength_text"
             tools:text="My Home Network" />
 
-        <!-- Signal Strength (in dBm) -->
         <TextView
             android:id="@+id/signal_strength_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:textColor="@color/text_secondary"
             android:textSize="16sp"
+            <!-- THIS LINE IS FIXED -->
+            android:textColor="@color/text_secondary_dark"
             app:layout_constraintEnd_toStartOf="@id/security_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="-55 dBm" />
 
-        <!-- Placeholder for the Security Lock icon -->
         <ImageView
             android:id="@+id/security_icon"
             android:layout_width="24dp"
@@ -62,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@android:drawable/ic_lock_lock" />
+            tools:src="@drawable/ic_lock" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
