@@ -1,11 +1,11 @@
 # .github/workflows/build.yml
-# V13: The Correct, Modern Native Build - Using the official Gradle Build Action.
+# V13.1: Corrected YAML syntax error.
 
 name: Build Android APK
 
 on: [push]
 
-jobs S:
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
