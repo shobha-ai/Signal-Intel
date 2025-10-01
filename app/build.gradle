@@ -28,12 +28,9 @@ android {
 }
 
 dependencies {
-    // Core library for app compatibility on different Android versions.
     implementation 'androidx.appcompat:appcompat:1.6.1'
-
-    // Google's modern UI components (Toolbar, TabLayout, etc.).
     implementation 'com.google.android.material:material:1.11.0'
-
-    // Library for using Fragments, which power our tabbed pages.
     implementation 'androidx.fragment:fragment:1.6.2'
+    // Add this line for RecyclerView support
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
 }
