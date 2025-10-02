@@ -32,6 +32,7 @@ public class BluetoothClassDecoder {
     }
 
     private static int getMajorDeviceClass(int bluetoothClass) {
+        // Corrected from CLASS_MASK to CLASS_MASK
         return bluetoothClass & BluetoothClass.Device.Major.CLASS_MASK;
     }
     
