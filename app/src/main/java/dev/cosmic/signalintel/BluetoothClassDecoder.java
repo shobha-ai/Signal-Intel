@@ -2,15 +2,13 @@ package dev.cosmic.signalintel;
 
 import android.bluetooth.BluetoothClass;
 
-// This is a helper class to decode the integer "Bluetooth Class"
-// into a human-readable device type.
 public class BluetoothClassDecoder {
 
     public static String getDeviceType(int bluetoothClass) {
         switch (getMajorDeviceClass(bluetoothClass)) {
             case BluetoothClass.Device.Major.COMPUTER:
                 return "Computer";
-            case Bluetooth-Class.Device.Major.PHONE:
+            case BluetoothClass.Device.Major.PHONE:
                 return "Phone";
             case BluetoothClass.Device.Major.NETWORKING:
                 return "Network Device";
@@ -45,7 +43,6 @@ public class BluetoothClassDecoder {
                 return "Hands-free Device";
             case BluetoothClass.Device.AUDIO_VIDEO_LOUDSPEAKER:
                 return "Loudspeaker";
-
             case BluetoothClass.Device.AUDIO_VIDEO_HEADPHONES:
                 return "Headphones";
             case BluetoothClass.Device.AUDIO_VIDEO_PORTABLE_AUDIO:
@@ -56,7 +53,6 @@ public class BluetoothClassDecoder {
                 return "Set-top Box";
             case BluetoothClass.Device.AUDIO_VIDEO_HIFI_AUDIO:
                 return "HiFi Audio";
-
             case BluetoothClass.Device.AUDIO_VIDEO_VCR:
                 return "VCR";
             case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_CAMERA:
@@ -65,7 +61,6 @@ public class BluetoothClassDecoder {
                 return "Camcorder";
             case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_MONITOR:
                 return "Video Monitor";
-
             case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER:
                 return "TV / Display";
             case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_CONFERENCING:
