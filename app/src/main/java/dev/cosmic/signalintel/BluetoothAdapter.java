@@ -29,12 +29,12 @@ public class BluetoothAdapter extends RecyclerView.Adapter<BluetoothAdapter.Blue
     public void onBindViewHolder(@NonNull BluetoothViewHolder holder, int position) {
         BluetoothDevice device = deviceList.get(position);
         
-        // Use a placeholder if the device name is null or empty.
         String deviceName = device.getName();
         if (deviceName == null || deviceName.isEmpty()) {
             deviceName = "Unknown Device";
         }
         holder.deviceName.setText(deviceName);
+        holder.deviceAddress.setText(device.getAddress());
     }
 
     @Override
@@ -44,12 +44,14 @@ public class BluetoothAdapter extends RecyclerView.Adapter<BluetoothAdapter.Blue
 
     public static class BluetoothViewHolder extends RecyclerView.ViewHolder {
         public final TextView deviceName;
-        public final ImageView bluetoothIcon;
+        public final TextView deviceAddress;
+        public final ImageView deviceIcon;
 
         public BluetoothViewHolder(@NonNull View itemView) {
             super(itemView);
             deviceName = itemView.findViewById(R.id.device_name);
-            bluetoothIcon = itemView.findViewById(R.id.bluetooth_icon);
+            deviceAddress = itemView.findViewById(R.id.device_address);
+            deviceIcon = itemView.findViewById(R.id.device_icon);
         }
     }
 }
