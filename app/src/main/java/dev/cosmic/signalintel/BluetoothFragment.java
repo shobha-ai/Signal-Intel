@@ -15,7 +15,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -33,6 +36,7 @@ public class BluetoothFragment extends Fragment {
     private final ArrayList<dev.cosmic.signalintel.BluetoothDevice> deviceList = new ArrayList<>();
     private BluetoothAdapter systemBluetoothAdapter;
     private dev.cosmic.signalintel.BluetoothAdapter recyclerAdapter;
+    private FloatingActionButton fabScan;
     private boolean isScanning = false;
 
     private final ActivityResultLauncher<String[]> requestMultiplePermissionsLauncher =
@@ -54,7 +58,7 @@ public class BluetoothFragment extends Fragment {
                     addDeviceToList(device);
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                isScanning = false;
+                stopScanAnimation();
                 Toast.makeText(getContext(), "Scan finished.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -72,6 +76,7 @@ public class BluetoothFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.bluetooth_recycler_view);
+        fabScan = view.findViewById(R.id.fab_scan_bluetooth);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerAdapter = new dev.cosmic.signalintel.BluetoothAdapter(deviceList);
@@ -82,10 +87,8 @@ public class BluetoothFragment extends Fragment {
         } else {
             getPairedDevices();
         }
-        
-        // We will add a scan button here in a future step.
-        // For now, we will add a placeholder to trigger the scan.
-        view.findViewById(R.id.bluetooth_recycler_view).setOnClickListener(v -> startDiscoveryWithPermissions());
+
+        fabScan.setOnClickListener(v -> startDiscoveryWithPermissions());
 
         return view;
     }
@@ -150,7 +153,7 @@ public class BluetoothFragment extends Fragment {
     private void startDiscovery() {
         if (isScanning) return;
         Toast.makeText(getContext(), "Scanning for new devices...", Toast.LENGTH_SHORT).show();
-        isScanning = true;
+        startScanAnimation();
         systemBluetoothAdapter.startDiscovery();
     }
     
@@ -158,7 +161,23 @@ public class BluetoothFragment extends Fragment {
     private void stopDiscovery() {
         if (isScanning) {
             systemBluetoothAdapter.cancelDiscovery();
-            isScanning = false;
+            stopScanAnimation();
+        }
+    }
+
+    private void startScanAnimation() {
+        isScanning = true;
+        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(1000);
+        rotate.setRepeatCount(Animation.INFINITE);
+        rotate.setInterpolator(new LinearInterpolator());
+        fabScan.startAnimation(rotate);
+    }
+
+    private void stopScanAnimation() {
+        isScanning = false;
+        if (fabScan != null) {
+            fabScan.clearAnimation();
         }
     }
 }
