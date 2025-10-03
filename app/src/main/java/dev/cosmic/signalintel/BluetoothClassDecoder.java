@@ -19,7 +19,7 @@ public class BluetoothClassDecoder {
             case BluetoothClass.Device.Major.IMAGING:
                 return "Imaging Device";
             case BluetoothClass.Device.Major.WEARABLE:
-                return getWearableDeviceType(bluetoothClass);
+                return "Wearable"; // Simplified for now
             case BluetoothClass.Device.Major.TOY:
                 return "Toy";
             case BluetoothClass.Device.Major.HEALTH:
@@ -32,16 +32,16 @@ public class BluetoothClassDecoder {
     }
 
     private static int getMajorDeviceClass(int bluetoothClass) {
-        // Corrected from CLASS_MASK to CLASS_MASK
-        return bluetoothClass & BluetoothClass.Device.Major.CLASS_MASK;
+        // This is the corrected line.
+        return bluetoothClass & BluetoothClass.Device.CLASS_MASK;
     }
-    
+
     private static String getAudioVideoDeviceType(int bluetoothClass) {
         switch (bluetoothClass) {
             case BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET:
                 return "Wearable Headset";
             case BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE:
-                return "Hands-free Device";
+                return "Hands-free";
             case BluetoothClass.Device.AUDIO_VIDEO_LOUDSPEAKER:
                 return "Loudspeaker";
             case BluetoothClass.Device.AUDIO_VIDEO_HEADPHONES:
@@ -52,39 +52,10 @@ public class BluetoothClassDecoder {
                 return "Car Audio";
             case BluetoothClass.Device.AUDIO_VIDEO_SET_TOP_BOX:
                 return "Set-top Box";
-            case BluetoothClass.Device.AUDIO_VIDEO_HIFI_AUDIO:
-                return "HiFi Audio";
-            case BluetoothClass.Device.AUDIO_VIDEO_VCR:
-                return "VCR";
-            case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_CAMERA:
-                return "Video Camera";
-            case BluetoothClass.Device.AUDIO_VIDEO_CAMCORDER:
-                return "Camcorder";
-            case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_MONITOR:
-                return "Video Monitor";
             case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER:
                 return "TV / Display";
-            case BluetoothClass.Device.AUDIO_VIDEO_VIDEO_CONFERENCING:
-                return "Video Conferencing";
             default:
-                return "Audio/Video Device";
-        }
-    }
-    
-    private static String getWearableDeviceType(int bluetoothClass) {
-        switch (bluetoothClass) {
-            case BluetoothClass.Device.WEARABLE_WRIST_WATCH:
-                return "Smartwatch";
-            case BluetoothClass.Device.WEARABLE_PAGER:
-                return "Pager";
-            case BluetoothClass.Device.WEARABLE_JACKET:
-                return "Jacket";
-            case BluetoothClass.Device.WEARABLE_HELMET:
-                return "Helmet";
-            case BluetoothClass.Device.WEARABLE_GLASSES:
-                return "Smart Glasses";
-            default:
-                return "Wearable";
+                return "Audio/Video";
         }
     }
 }
